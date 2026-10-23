@@ -1,0 +1,312 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Hotel Capelli Talca - Carta de Restaurant</title>
+    <style>
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+        
+        /* Forzado de renderizado de color e impresión de alta calidad */
+        html, body {
+            -webkit-print-color-adjust: exact !important;
+            print-color-adjust: exact !important;
+            color-adjust: exact !important;
+        }
+
+        body {
+            font-family: 'Times New Roman', Times, Georgia, serif;
+            background: #b0b5bc;
+            color: #111111;
+            min-height: 100vh;
+            padding: 20px 10px; /* Reducido para mejor espacio en bordes móviles */
+            display: flex;
+            justify-content: center;
+            align-items: flex-start;
+        }
+
+        /* Contenedor adaptativo flexible */
+        .menu-container {
+            width: 100%;
+            max-width: 850px;
+            padding: 40px 25px; /* Ajustado dinámicamente para celulares */
+            position: relative;
+            box-shadow: 0 25px 55px rgba(0, 0, 0, 0.4);
+            background-color: #cbd0d6 !important;
+            background-image: linear-gradient(135deg, #e3e6ea 0%, #cbd0d6 50%, #b8bdc4 100%) !important;
+            border: 12px double #7c683c !important; /* Ligeramente más delgado para pantallas pequeñas */
+        }
+
+        /* Línea fina blanca decorativa interior */
+        .menu-container::before {
+            content: ''; position: absolute; 
+            top: 2px; left: 2px; right: 2px; bottom: 2px;
+            border: 2px solid #ffffff !important; 
+            pointer-events: none; z-index: 1;
+        }
+
+        /* Esquinas Barrocas que escalan su tamaño en móviles */
+        .corner-ornament { 
+            position: absolute; 
+            width: 8vw; 
+            max-width: 75px;
+            min-width: 45px;
+            height: auto; 
+            pointer-events: none; 
+            z-index: 4; 
+        }
+        .top-left { top: 4px; left: 4px; }
+        .top-right { top: 4px; right: 4px; transform: scaleX(-1); }
+        .bottom-left { bottom: 4px; left: 4px; transform: scaleY(-1); }
+        .bottom-right { bottom: 4px; right: 4px; transform: scale(-1); }
+
+        /* Cabecera Adaptativa */
+        .header { 
+            display: flex; flex-direction: column; align-items: center; justify-content: center; text-align: center; 
+            margin-bottom: 35px; position: relative; z-index: 2; 
+        }
+        .logo-box { width: 100%; max-width: 380px; height: auto; margin-bottom: 10px; }
+        .welcome-text { font-size: 1.05rem; color: #2b2214; font-weight: bold; letter-spacing: 1px; text-transform: uppercase; margin-top: 5px; }
+        
+        /* Rejilla inteligente (Por defecto 2 columnas, cambia a 1 en celulares) */
+        .menu-grid { 
+            display: grid; 
+            grid-template-columns: repeat(2, 1fr); 
+            column-gap: 40px; 
+            row-gap: 30px; 
+            position: relative; 
+            z-index: 2; 
+        }
+
+        .menu-section { break-inside: avoid; page-break-inside: avoid; width: 100%; }
+        
+        /* Banners adaptables sin desborde */
+        .section-banner {
+            background: #2b2214 !important; 
+            color: #e5cc88 !important; 
+            font-size: 1.1rem; font-weight: bold; text-transform: uppercase;
+            letter-spacing: 1px; padding: 8px 12px; margin-bottom: 18px; position: relative; 
+            display: block; width: 100%; border-left: 4px solid #7c683c;
+        }
+
+        .subsection-banner { background: #7c683c !important; color: #ffffff !important; font-size: 0.95rem; padding: 5px 12px; margin: 20px 0 14px 0; display: inline-block; font-weight: bold; position: relative; width: 85%; }
+
+        /* Filas Flexibles anti-descuadre */
+        .menu-item { display: flex; justify-content: space-between; align-items: flex-end; margin-bottom: 14px; font-size: 1rem; padding-left: 2px; width: 100%; }
+        .item-name { font-weight: bold; color: #111111 !important; padding-right: 6px; text-align: left; }
+        .item-dots { flex-grow: 1; border-bottom: 1px dotted rgba(26, 23, 18, 0.6) !important; margin-bottom: 5px; min-width: 15px; }
+        .item-price { font-family: 'Arial', sans-serif; font-weight: 800; color: #111111 !important; padding-left: 6px; font-size: 1.05rem; white-space: nowrap; }
+        .item-detail { font-size: 0.85rem; color: #333333 !important; font-style: italic; margin-top: -10px; margin-bottom: 12px; display: block; padding-left: 2px; text-align: left; }
+
+        /* Media Query Crítica para Celulares (Pantallas menores a 768px de ancho) */
+        @media (max-width: 768px) {
+            body { padding: 10px 5px; }
+            .menu-container { padding: 35px 15px; border-width: 8px !important; }
+            .menu-grid { grid-template-columns: 1fr; row-gap: 25px; }
+            .logo-box { max-width: 280px; }
+            .welcome-text { font-size: 0.95rem; }
+            .menu-item { font-size: 0.95rem; }
+            .item-price { font-size: 1rem; }
+            .section-banner { font-size: 1rem; padding: 6px 10px; }
+        }
+
+        @media print {
+            body { background: none !important; padding: 0 !important; }
+            .menu-container { box-shadow: none !important; border: 15px double #7c683c !important; max-width: 100%; }
+            .menu-grid { grid-template-columns: repeat(2, 1fr); } /* Mantiene las 2 columnas fijas solo en papel impreso */
+        }
+    </style>
+</head>
+<body>
+
+<div class="menu-container">
+    <!-- Filigranas Barrocas vectorizadas en HD -->
+    <svg class="corner-ornament top-left" viewBox="0 0 100 100" xmlns="http://w3.org">
+        <path d="M6,75 L6,6 L75,6" stroke="#6e551c" stroke-width="2.5" fill="none"/>
+        <path d="M12,65 L12,12 L65,12" stroke="#8a6f27" stroke-width="1" fill="none"/>
+        <path d="M6,6 C15,25 25,35 45,45 C35,55 15,45 6,6 Z" fill="#6e551c" stroke="#362a0b" stroke-width="0.7"/>
+        <path d="M6,6 C25,15 35,25 45,45 C55,35 45,15 6,6 Z" fill="#8a6f27" stroke="#6e551c" stroke-width="0.7"/>
+        <circle cx="20" cy="20" r="4" fill="#362a0b" stroke="#ebd796" stroke-width="1"/>
+    </svg>
+    <svg class="corner-ornament top-right" viewBox="0 0 100 100" xmlns="http://w3.org" id="tr"></svg>
+    <svg class="corner-ornament bottom-left" viewBox="0 0 100 100" xmlns="http://w3.org" id="bl"></svg>
+    <svg class="corner-ornament bottom-right" viewBox="0 0 100 100" xmlns="http://w3.org" id="br"></svg>
+
+    <header class="header">
+        <svg class="logo-box" viewBox="0 0 540 260" xmlns="http://w3.org">
+            <defs>
+                <linearGradient id="capelli-deep-bronze" x1="0%" y1="0%" x2="100%" y2="100%">
+                    <stop offset="0%" stop-color="#594926" /><stop offset="35%" stop-color="#8a6f27" /><stop offset="55%" stop-color="#bfa054" /><stop offset="75%" stop-color="#4a3b12" /><stop offset="100%" stop-color="#241c05" />
+                </linearGradient>
+            </defs>
+            <text x="325" y="90" font-family="'Times New Roman', Times, serif" font-size="33" fill="url(#capelli-deep-bronze)" font-weight="bold" letter-spacing="12" text-anchor="middle">HOTEL</text>
+            <text x="30" y="185" font-family="'Georgia', serif" font-size="155" fill="url(#capelli-deep-bronze)" font-style="italic" font-weight="100">C</text>
+            <text x="145" y="180" font-family="'Georgia', serif" font-size="95" fill="url(#capelli-deep-bronze)" font-style="italic">apelli</text>
+            <text x="440" y="232" font-family="'Times New Roman', Times, serif" font-size="28" fill="url(#capelli-deep-bronze)" font-weight="bold" letter-spacing="5" text-anchor="end">TALCA</text>
+        </svg>
+        <div class="welcome-text">Carta de Restaurant</div>
+    </header>
+
+    <div class="menu-grid">
+
+
+ 
+ <!-- DESAYUNOS -->
+        <div class="menu-section">
+            <div class="section-banner">🍳 Desayunos</div>
+            <div class="menu-item"><span class="item-name">Desayuno buffet</span><span class="item-dots"></span><span class="item-price">$9.900</span></div>
+            <span class="item-detail">Horario: Lun a Vie 7:30 a 10:00 hrs / Sáb, Dom y Festivos 9:00 a 11:00 hrs.</span>
+        </div>
+
+        <!-- ENSALADAS -->
+        <div class="menu-section">
+            <div class="section-banner">🥗 Ensaladas</div>
+            <div class="menu-item"><span class="item-name">Ensalada cesar camarón</span><span class="item-dots"></span><span class="item-price">$9.900</span></div>
+            <div class="menu-item"><span class="item-name">Ensalada cesar</span><span class="item-dots"></span><span class="item-price">$8.900</span></div>
+            <div class="menu-item"><span class="item-name">Ensalada lechuga palta</span><span class="item-dots"></span><span class="item-price">$4.500</span></div>
+            <div class="menu-item"><span class="item-name">Ensalada surtida o del día</span><span class="item-dots"></span><span class="item-price">$3.500</span></div>
+        </div>
+
+        <!-- PLATILLOS PRINCIPALES -->
+        <div class="menu-section" style="grid-row: span 2;">
+            <div class="section-banner">🍽️ Platillos Principales</div>
+            <div class="menu-item"><span class="item-name">Milanesa de filete</span><span class="item-dots"></span><span class="item-price">$15.900</span></div>
+            <div class="menu-item"><span class="item-name">Tallarines di Mare</span><span class="item-dots"></span><span class="item-price">$14.900</span></div>
+            <div class="menu-item"><span class="item-name">Lomo vetado (300gr)</span><span class="item-dots"></span><span class="item-price">$13.900</span></div>
+            <div class="menu-item"><span class="item-name">Vacuno a la cacerola (250gr)</span><span class="item-dots"></span><span class="item-price">$13.900</span></div>
+            <div class="menu-item"><span class="item-name">Salmón crocante</span><span class="item-dots"></span><span class="item-price">$12.900</span></div>
+            <div class="menu-item"><span class="item-name">Risotto de setas</span><span class="item-dots"></span><span class="item-price">$12.900</span></div>
+            <div class="menu-item"><span class="item-name">Milanesa de pollo</span><span class="item-dots"></span><span class="item-price">$11.900</span></div>
+            <div class="menu-item"><span class="item-name">Tallarines salsa Alfredo</span><span class="item-dots"></span><span class="item-price">$10.900</span></div>
+            <div class="menu-item"><span class="item-name">Salmón a la plancha</span><span class="item-dots"></span><span class="item-price">$10.900</span></div>
+            <div class="menu-item"><span class="item-name">Pechuga de pollo a la plancha</span><span class="item-dots"></span><span class="item-price">$9.900</span></div>
+
+            <div class="subsection-banner">🕒 Menús Especiales</div>
+            <div class="menu-item"><span class="item-name">Menú cena</span><span class="item-dots"></span><span class="item-price">$12.900</span></div>
+            <div class="menu-item"><span class="item-name">Menú ejecutivo</span><span class="item-dots"></span><span class="item-price">$8.990</span></div>
+        </div>
+
+        <!-- ACOMPAÑAMIENTOS & ENTRADAS -->
+        <div class="menu-section">
+            <div class="section-banner">🍟 Acompañamientos</div>
+            <div class="menu-item"><span class="item-name">Verduras salteadas</span><span class="item-dots"></span><span class="item-price">$5.500</span></div>
+            <div class="menu-item"><span class="item-name">Arroz cremoso</span><span class="item-dots"></span><span class="item-price">$4.900</span></div>
+            <div class="menu-item"><span class="item-name">Puré de papas</span><span class="item-dots"></span><span class="item-price">$4.500</span></div>
+            <div class="menu-item"><span class="item-name">Choclo a la crema</span><span class="item-dots"></span><span class="item-price">$4.500</span></div>
+            <div class="menu-item"><span class="item-name">Papas rústicas salteadas</span><span class="item-dots"></span><span class="item-price">$4.500</span></div>
+            <div class="menu-item"><span class="item-name">Papas fritas</span><span class="item-dots"></span><span class="item-price">$4.500</span></div>
+            <div class="menu-item"><span class="item-name">Arroz</span><span class="item-dots"></span><span class="item-price">$3.900</span></div>
+            <div class="menu-item"><span class="item-name">Consomé</span><span class="item-dots"></span><span class="item-price">$3.490</span></div>
+            <div class="menu-item"><span class="item-name">Palta</span><span class="item-dots"></span><span class="item-price">$2.400</span></div>
+            <div class="menu-item"><span class="item-name">Huevo frito</span><span class="item-dots"></span><span class="item-price">$1.500</span></div>
+        </div>
+
+        <!-- NIÑOS -->
+        <div class="menu-section">
+            <div class="section-banner">🧒 Platillos Niños</div>
+            <div class="menu-item"><span class="item-name">Chiken fingers</span><span class="item-dots"></span><span class="item-price">$8.900</span></div>
+            <div class="menu-item"><span class="item-name">Hamburguesa clásica</span><span class="item-dots"></span><span class="item-price">$8.900</span></div>
+            <div class="menu-item"><span class="item-name">Hamburguesa kids</span><span class="item-dots"></span><span class="item-price">$6.900</span></div>
+            <div class="menu-item"><span class="item-name">Sándwich aliado</span><span class="item-dots"></span><span class="item-price">$3.990</span></div>
+        </div>
+
+
+
+
+        <!-- POSTRES -->
+        <div class="menu-section">
+            <div class="section-banner">🍰 Postres</div>
+            <div class="menu-item"><span class="item-name">Postre del día</span><span class="item-dots"></span><span class="item-price">$4.500</span></div>
+            <div class="menu-item"><span class="item-name">Ensalada de frutas</span><span class="item-dots"></span><span class="item-price">$4.500</span></div>
+            <div class="menu-item"><span class="item-name">Creme Brulee</span><span class="item-dots"></span><span class="item-price">$4.500</span></div>
+            <div class="menu-item"><span class="item-name">Pannacotta</span><span class="item-dots"></span><span class="item-price">$4.500</span></div>
+        </div>
+
+        <!-- BEBESTIBLES & CAFETERÍA -->
+        <div class="menu-section">
+            <div class="section-banner">🥤 Bebestibles</div>
+            <div class="menu-item"><span class="item-name">Limonada coco</span><span class="item-dots"></span><span class="item-price">$5.900</span></div>
+            <div class="menu-item"><span class="item-name">Lim. menta-jengibre</span><span class="item-dots"></span><span class="item-price">$4.500</span></div>
+            <div class="menu-item"><span class="item-name">Red bull (250ml)</span><span class="item-dots"></span><span class="item-price">$4.000</span></div>
+            <div class="menu-item"><span class="item-name">Jugo natural / Lim. tradicional</span><span class="item-dots"></span><span class="item-price">$3.500</span></div>
+            <div class="menu-item"><span class="item-name">Agua sin gas / con gas (600ml)</span><span class="item-dots"></span><span class="item-price">$2.000</span></div>
+            <div class="menu-item"><span class="item-name">Bebidas (350ml)</span><span class="item-dots"></span><span class="item-price">$2.000</span></div>
+
+            <div class="subsection-banner">☕ Cafetería</div>
+            <div class="menu-item"><span class="item-name">Coffee break</span><span class="item-dots"></span><span class="item-price">$7.300</span></div>
+            <div class="menu-item"><span class="item-name">Chocolate</span><span class="item-dots"></span><span class="item-price">$3.500</span></div>
+            <div class="menu-item"><span class="item-name">Café cortado</span><span class="item-dots"></span><span class="item-price">$2.300</span></div>
+            <div class="menu-item"><span class="item-name">Expresso / Té con leche</span><span class="item-dots"></span><span class="item-price">$2.100</span></div>
+            <div class="menu-item"><span class="item-name">Té Supreme</span><span class="item-dots"></span><span class="item-price">$1.800</span></div>
+            <div class="menu-item"><span class="item-name">Leche</span><span class="item-dots"></span><span class="item-price">$990</span></div>
+        </div>
+
+        <!-- COCTELERÍA -->
+        <div class="menu-section" style="grid-column: 1 / -1;">
+            <div class="section-banner">🍸 Coctelería y Aperitivos</div>
+            <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 20px;">
+                <div>
+                    <div class="menu-item"><span class="item-name">Mojito corona sabores</span><span class="item-dots"></span><span class="item-price">$8.500</span></div>
+                    <div class="menu-item"><span class="item-name">Mojito corona</span><span class="item-dots"></span><span class="item-price">$7.900</span></div>
+                    <div class="menu-item"><span class="item-name">Mojito</span><span class="item-dots"></span><span class="item-price">$7.500</span></div>
+                    <div class="menu-item"><span class="item-name">Daiquiri sabores / Margarita Sabores</span><span class="item-dots"></span><span class="item-price">$6.900</span></div>
+                    <div class="menu-item"><span class="item-name">2x1 Michelada / Caipiriña maracuyá</span><span class="item-dots"></span><span class="item-price">$6.500</span></div>
+                </div>
+                <div>
+                    <div class="menu-item"><span class="item-name">Blue margarita / Gin tonic red</span><span class="item-dots"></span><span class="item-price">$5.900</span></div>
+                    <div class="menu-item"><span class="item-name">Aperol Spritz / Whisky sour / Ramazzoti</span><span class="item-dots"></span><span class="item-price">$5.900</span></div>
+                    <div class="menu-item"><span class="item-name">Caipiriña / Caipiroska / Caipirisma</span><span class="item-dots"></span><span class="item-price">$5.500</span></div>
+                    <div class="menu-item"><span class="item-name">Pisco alto del Carmen / Vino verano</span><span class="item-dots"></span><span class="item-price">$5.500</span></div>
+                    <div class="menu-item"><span class="item-name">Pisco sour</span><span class="item-dots"></span><span class="item-price">$3.900</span></div>
+                </div>
+            </div>
+        </div>
+
+        <!-- VINOS Y LICORES -->
+        <div class="menu-section" style="grid-column: 1 / -1; display: grid; grid-template-columns: 1fr 1fr; gap: 40px;">
+            <div>
+                <div class="section-banner">🍷 Vinos por Copa</div>
+                <div class="menu-item"><span class="item-name">Casillero del Diablo (Variedades)</span><span class="item-dots"></span><span class="item-price">$7.000</span></div>
+                <div class="menu-item"><span class="item-name">Vino blanco Chardonnay Carmen</span><span class="item-dots"></span><span class="item-price">$6.000</span></div>
+                <div class="menu-item"><span class="item-name">Ricadonna Asti / Vionelli Rose</span><span class="item-dots"></span><span class="item-price">$5.900</span></div>
+                <div class="menu-item"><span class="item-name">Carmen (Blanco / Tinto)</span><span class="item-dots"></span><span class="item-price">$5.000</span></div>
+            </div>
+            <div>
+                <div class="section-banner">🍾 Botellas & Licores</div>
+                <div class="menu-item"><span class="item-name">Whisky Buchanans</span><span class="item-dots"></span><span class="item-price">$70.000</span></div>
+                <div class="menu-item"><span class="item-name">Tequila reposado Jose Cuervo</span><span class="item-dots"></span><span class="item-price">$65.000</span></div>
+                <div class="menu-item"><span class="item-name">Whisky Jhonnie Walker (Red / Black)</span><span class="item-dots"></span><span class="item-price">$60.000</span></div>
+                <div class="menu-item"><span class="item-name">Vino Piedra toro</span><span class="item-dots"></span><span class="item-price">$22.000</span></div>
+            </div>
+        </div>
+
+        <!-- CERVEZAS Y SHOTS COMPLETOS -->
+        <div class="menu-section">
+            <div class="section-banner">🍺 Cervezas</div>
+            <div class="menu-item"><span class="item-name">Tradicionales (Corona, Heineken, etc)</span><span class="item-dots"></span><span class="item-price">$3.500</span></div>
+            <div class="menu-item"><span class="item-name">Cerveza sin alcohol</span><span class="item-dots"></span><span class="item-price">$3.000</span></div>
+        </div>
+
+        <div class="menu-section">
+            <div class="section-banner">🥃 Shots</div>
+            <div class="menu-item"><span class="item-name">Shot Whisky Jack Daniels</span><span class="item-dots"></span><span class="item-price">$7.900</span></div>
+            <div class="menu-item"><span class="item-name">Shot swing</span><span class="item-dots"></span><span class="item-price">$7.500</span></div>
+            <div class="menu-item"><span class="item-name">Shot Whisky Jhonnie Black</span><span class="item-dots"></span><span class="item-price">$6.900</span></div>
+            <div class="menu-item"><span class="item-name">Shot Whisky Jhonnie Red</span><span class="item-dots"></span><span class="item-price">$5.900</span></div>
+            <div class="menu-item"><span class="item-name">Shot Jagger</span><span class="item-dots"></span><span class="item-price">$4.900</span></div>
+            <div class="menu-item"><span class="item-name">Shot tequila Jose Cuervo</span><span class="item-dots"></span><span class="item-price">$3.900</span></div>
+            <div class="menu-item"><span class="item-name">Shot granadina / Shot amaretto</span><span class="item-dots"></span><span class="item-price">$3.000</span></div>
+        </div>
+
+    </div>
+</div>
+
+<script>
+    // Duplicación automática de los vectores de las esquinas barrocas
+    const baseOrnament = document.querySelector('.top-left').innerHTML;
+    document.querySelector('.top-right').innerHTML = baseOrnament;
+    document.querySelector('.bottom-left').innerHTML = baseOrnament;
+    document.querySelector('.bottom-right').innerHTML = baseOrnament;
+</script>
+</body>
+</html>
