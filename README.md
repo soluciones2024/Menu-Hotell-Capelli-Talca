@@ -1,2 +1,2 @@
-# Menu-Hotell-Capelli-Talca
+# Menu-Hotel-Capelli-Talca
 Carta de Menu Hotel Capelli Talca
